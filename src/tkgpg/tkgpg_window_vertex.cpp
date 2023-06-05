@@ -39,8 +39,8 @@ void WindowVertex::RemoveVertex(int index) {
 }
 
 void WindowVertex::OnUpdateSize(int width, int height) {
-  pos = ImVec2(width * 0.7f, 0.0f);
-  size = ImVec2(width * 0.3f, height);
+  pos = ImVec2(width - 330.0f, 0.0f);
+  size = ImVec2(330.0f, height);
   content_pos = ImVec2();
   content_size = size;
 

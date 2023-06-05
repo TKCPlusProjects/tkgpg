@@ -6,7 +6,6 @@ void ViewTableVertexCell::OnDisplay() {
   shared_ptr<ViewTableVertex> table = this->table.lock();
 
   ImGui::Separator();
-
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.5f, 0.0f, (index == table->select_index) ? 1.0f : 0.0f));
   char buf[32];
   sprintf(buf, "%d", index);
@@ -18,10 +17,10 @@ void ViewTableVertexCell::OnDisplay() {
   ImGui::PopStyleColor(1);
   
   ImGui::SameLine(ImGui::GetCursorPosX(), 5.0f);
-  ImGui::SetNextItemWidth(80.0f);
+  ImGui::SetNextItemWidth(100.0f);
   ImGui::DragFloat("##coordinate_x", &point.x, 0.01f, 0.0f, 0.0f, "%+.2f");
   ImGui::SameLine(ImGui::GetCursorPosX(), 5.0f);
-  ImGui::SetNextItemWidth(80.0f);
+  ImGui::SetNextItemWidth(100.0f);
   ImGui::DragFloat("##coordinate_y", &point.y, 0.01f, 0.0f, 0.0f, "%+.2f");
   
   ImGui::SameLine();
