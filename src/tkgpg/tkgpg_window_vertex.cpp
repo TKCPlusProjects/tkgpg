@@ -7,7 +7,9 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
   vertex_table->height_func = [=](int index) {
     return 32.0f;
   };
-  vertex_table->select_action = [=](int i){};
+  vertex_table->select_action = [=](int i){
+    vertex_table->select_index = i;
+  };
   vertex_table->add_action = [=](int i){
     b2Vec2 curr = vertex_lst[i];
     b2Vec2 next = i+1 < vertex_lst.size() ? vertex_lst[i+1] : vertex_lst[0];
