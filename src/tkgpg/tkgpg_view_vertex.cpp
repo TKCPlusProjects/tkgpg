@@ -11,10 +11,10 @@ void ViewTableVertexCell::OnDisplay() {
   
   ImGui::SameLine(ImGui::GetCursorPosX(), 5.0f);
   ImGui::SetNextItemWidth(80.0f);
-  ImGui::InputFloat("##coordinate_x", &point.x, 0.0f, 0.0f, "%+.2f");
+  ImGui::DragFloat("##coordinate_x", &point.x, 0.01f, 0.0f, 0.0f, "%+.2f");
   ImGui::SameLine(ImGui::GetCursorPosX(), 5.0f);
   ImGui::SetNextItemWidth(80.0f);
-  ImGui::InputFloat("##coordinate_y", &point.y, 0.0f, 0.0f, "%+.2f");
+  ImGui::DragFloat("##coordinate_y", &point.y, 0.01f, 0.0f, 0.0f, "%+.2f");
   
   ImGui::SameLine();
   if (ImGui::Button("+", ImVec2(30.0f, 30.0f))) {
