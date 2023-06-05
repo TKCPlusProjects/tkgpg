@@ -43,9 +43,20 @@ void SceneEditor::OnDisplay() {
   world->DebugDraw();
   
   drawer->Draw(canvas.get());
+  drawer->point->Push(5.0f, b2Vec2(), b2Color(1.0f, 1.0f, 1.0f, 1.0f));
 
   graphic->vertexes = window_vertex->vertex_lst;
   drawer->Draw(graphic.get());
+
+  for (size_t i = 0; i < window_vertex->vertex_lst.size(); i++) {
+    b2Vec2 vertex = window_vertex->vertex_lst[i];
+    if (i == window_vertex->vertex_table->select_index) {
+      drawer->point->Push(10.0f, vertex, b2Color(1.0f, 0.0f, 0.0f, 1.0f));
+    } else {
+      drawer->point->Push(10.0f, vertex, b2Color(0.0f, 1.0f, 0.0f, 1.0f));
+    }
+  }
+  
 
   drawer->Flush();
 }

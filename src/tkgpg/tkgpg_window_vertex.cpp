@@ -34,6 +34,7 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
 void WindowVertex::InsertVertex(b2Vec2 vertex, int index) {
   vertex_lst.insert(vertex_lst.begin() + index, vertex);
   vertex_table->cell_list.insert(vertex_table->cell_list.begin() + index, vertex_table->CreateCell(vertex));
+  if (index == vertex_table->select_index) vertex_table->select_index++;
 }
 
 void WindowVertex::RemoveVertex(int index) {
