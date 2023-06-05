@@ -57,6 +57,30 @@ void SceneEditor::OnDisplay() {
     }
   }
   
+  if (ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) {
+    ImVec2 mouse_pos = ImGui::GetMousePos();
+    for (size_t i = 0; i < window_vertex->vertex_lst.size(); i++) {
+      b2Vec2 vertex = window_vertex->vertex_lst[i];
+      drawer->camera->ConvertWorldToScreen(&vertex.x, &vertex.y, vertex.x, vertex.y);
+
+      if (abs(mouse_pos.x - vertex.x) < 5 && abs(mouse_pos.y - vertex.y) < 5) {
+        window_vertex->vertex_table->select_index = i;
+        editing = true;
+        break;
+      }
+    }
+  }
+  if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && editing) {
+    ImVec2 mouse_pos = ImGui::GetMousePos();
+    drawer->camera->ConvertScreenToWorld(&mouse_pos.x, &mouse_pos.y, mouse_pos.x, mouse_pos.y);
+
+    int select_index = window_vertex->vertex_table->select_index;
+    window_vertex->vertex_lst[select_index] = b2Vec2(mouse_pos.x, mouse_pos.y);
+    window_vertex->vertex_table->cell_list[select_index]->point = b2Vec2(mouse_pos.x, mouse_pos.y);
+  }
+  if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
+    editing = false;
+  }
 
   drawer->Flush();
 }
