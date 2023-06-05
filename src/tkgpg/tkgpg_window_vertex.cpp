@@ -10,6 +10,9 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
   vertex_table->select_action = [=](int i){
     vertex_table->select_index = i;
   };
+  vertex_table->edit_action = [=](int i){
+    vertex_lst[i] = vertex_table->cell_list[i]->point;
+  };
   vertex_table->add_action = [=](int i){
     b2Vec2 curr = vertex_lst[i];
     b2Vec2 next = i+1 < vertex_lst.size() ? vertex_lst[i+1] : vertex_lst[0];

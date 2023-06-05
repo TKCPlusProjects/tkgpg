@@ -18,6 +18,7 @@ class ViewTableVertex : public ViewTable<ViewTableVertex, ViewTableVertexCell> {
 public:
   int select_index;
   function<void(int)> select_action;
+  function<void(int)> edit_action;
   function<void(int)> add_action;
   function<void(int)> remove_action;
 
