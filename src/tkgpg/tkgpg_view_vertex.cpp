@@ -20,6 +20,7 @@ void ViewTableVertexCell::OnDisplay() {
   ImGui::SetNextItemWidth(100.0f);
   if (ImGui::DragFloat("##coordinate_x", &point.x, 0.01f, 0.0f, 0.0f, "%+.2f")) {
     table->action = [=](){
+      table->select_action(index);
       table->edit_action(index);
     };
   }
@@ -27,6 +28,7 @@ void ViewTableVertexCell::OnDisplay() {
   ImGui::SetNextItemWidth(100.0f);
   if (ImGui::DragFloat("##coordinate_y", &point.y, 0.01f, 0.0f, 0.0f, "%+.2f")) {
     table->action = [=](){
+      table->select_action(index);
       table->edit_action(index);
     };
   }
