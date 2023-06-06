@@ -30,6 +30,10 @@ SceneEditor::SceneEditor() : Scene() {
 void SceneEditor::OnUpdateSize(int width, int height) {
   Scene::OnUpdateSize(width, height);
   drawer->SetSize(width, height);
+
+  Point offset((width - 330.0f) / 2.0f, height / 2.0f);
+  drawer->camera->ConvertScreenToWorld(&offset);
+  drawer->camera->SetCenter(-offset.x, offset.y);
 }
 
 void SceneEditor::OnDisplay() {
