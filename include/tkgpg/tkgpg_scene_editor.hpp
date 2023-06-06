@@ -13,7 +13,6 @@ public:
   shared_ptr<tkbox::Drawer> drawer;
   shared_ptr<b2World> world;
   shared_ptr<Graphic> canvas;
-  shared_ptr<Graphic> graphic;
 
   bool editing = false;
   

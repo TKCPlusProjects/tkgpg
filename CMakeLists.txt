@@ -42,6 +42,7 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(box2d CONFIG REQUIRED)
+find_package(unofficial-nativefiledialog CONFIG REQUIRED)
 find_package(tkcore CONFIG REQUIRED)
 find_package(tkgl CONFIG REQUIRED)
 find_package(tkbox CONFIG REQUIRED)
@@ -54,6 +55,7 @@ target_link_libraries(${PROJECT_NAME}
   glfw
   imgui::imgui
   box2d::box2d
+  unofficial::nativefiledialog::nfd
   tkcore::tkcore
   tkgl::tkgl
   tkbox::tkbox

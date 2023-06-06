@@ -2,13 +2,16 @@
 #define tkgpg_window_vertex_hpp
 
 #include <tkgpg/tkgpg_base.hpp>
+#include <tkgpg/tkgpg_view_file.hpp>
 #include <tkgpg/tkgpg_view_vertex.hpp>
 
 namespace tkht {
 namespace tkgpg {
 class WindowVertex : public tkgui::Window {
 public:
-  vector<b2Vec2> vertex_lst;
+  shared_ptr<Graphic> graphic;
+  
+  shared_ptr<ViewFile> file_view;
   shared_ptr<ViewTableVertex> vertex_table;
 
   WindowVertex();
