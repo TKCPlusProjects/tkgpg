@@ -61,7 +61,7 @@ void SceneEditor::OnDisplay() {
       ImVec2 mouse_pos = ImGui::GetMousePos();
       for (size_t i = 0; i < window_vertex->graphic->vertexes.size(); i++) {
         b2Vec2 vertex = window_vertex->graphic->vertexes[i];
-        drawer->camera->ConvertWorldToScreen(&vertex.x, &vertex.y, vertex.x, vertex.y);
+        drawer->camera->ConvertWorldToScreen((Point*)&vertex);
 
         if (abs(mouse_pos.x - vertex.x) < 5 && abs(mouse_pos.y - vertex.y) < 5) {
           window_vertex->vertex_table->select_index = i;
@@ -72,7 +72,7 @@ void SceneEditor::OnDisplay() {
     }
     if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && editing) {
       ImVec2 mouse_pos = ImGui::GetMousePos();
-      drawer->camera->ConvertScreenToWorld(&mouse_pos.x, &mouse_pos.y, mouse_pos.x, mouse_pos.y);
+      drawer->camera->ConvertScreenToWorld((Point*)&mouse_pos);
 
       int select_index = window_vertex->vertex_table->select_index;
       window_vertex->graphic->vertexes[select_index] = b2Vec2(mouse_pos.x, mouse_pos.y);
