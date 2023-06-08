@@ -4,8 +4,6 @@
 #include <tkgpg/tkgpg.hpp>
 #include <tkcore/tkcore.hpp>
 
-#include <filesystem>
-
 using namespace std;
 using namespace tkht;
 

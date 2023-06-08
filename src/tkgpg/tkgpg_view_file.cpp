@@ -1,6 +1,5 @@
 #include <tkgpg/tkgpg_view_file.hpp>
 #include <nfd.h>
-#include <filesystem>
 
 namespace tkht {
 namespace tkgpg {
