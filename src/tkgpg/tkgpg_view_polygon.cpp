@@ -1,9 +1,9 @@
-#include <tkgpg/tkgpg_view_vertex.hpp>
+#include <tkgpg/tkgpg_view_polygon.hpp>
 
 namespace tkht {
 namespace tkgpg {
-void ViewTableVertexCell::OnDisplay() {
-  shared_ptr<ViewTableVertex> table = this->table.lock();
+void ViewTablePolygonCell::OnDisplay() {
+  shared_ptr<ViewTablePolygon> table = this->table.lock();
 
   ImGui::Separator();
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.0f, 0.0f, (index == table->select_index) ? 1.0f : 0.0f));
@@ -49,13 +49,13 @@ void ViewTableVertexCell::OnDisplay() {
   ImGui::Separator();
 }
 
-shared_ptr<ViewTableVertexCell> ViewTableVertex::CreateCell(b2Vec2 point) {
-  shared_ptr<ViewTableVertexCell> cell = ViewTable::CreateCell();
+shared_ptr<ViewTablePolygonCell> ViewTablePolygon::CreateCell(Point point) {
+  shared_ptr<ViewTablePolygonCell> cell = ViewTable::CreateCell();
   cell->point = point;
   return cell;
 }
 
-void ViewTableVertex::OnDisplay() {
+void ViewTablePolygon::OnDisplay() {
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
   ImGui::PushFont(Font(FontType_Button));
 

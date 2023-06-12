@@ -2,7 +2,7 @@
 #define tkgpg_scene_editor_hpp
 
 #include <tkgpg/tkgpg_base.hpp>
-#include <tkgpg/tkgpg_window_vertex.hpp>
+#include <tkgpg/tkgpg_window_graphic.hpp>
 
 namespace tkht {
 namespace tkgpg {
@@ -10,8 +10,8 @@ class SceneEditor : public tkgui::Scene {
 public:
   shared_ptr<WindowVertex> window_vertex;
 
+  shared_ptr<Camera> camera;
   shared_ptr<tkbox::Drawer> drawer;
-  shared_ptr<b2World> world;
   shared_ptr<Graphic> canvas;
 
   bool editing = false;

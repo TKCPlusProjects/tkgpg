@@ -1,9 +1,10 @@
-#ifndef tkgpg_window_vertex_hpp
-#define tkgpg_window_vertex_hpp
+#ifndef tkgpg_window_graphic_hpp
+#define tkgpg_window_graphic_hpp
 
 #include <tkgpg/tkgpg_base.hpp>
 #include <tkgpg/tkgpg_view_file.hpp>
-#include <tkgpg/tkgpg_view_vertex.hpp>
+#include <tkgpg/tkgpg_view_shape.hpp>
+#include <tkgpg/tkgpg_view_polygon.hpp>
 
 namespace tkht {
 namespace tkgpg {
@@ -12,11 +13,12 @@ public:
   shared_ptr<Graphic> graphic;
   
   shared_ptr<ViewFile> file_view;
-  shared_ptr<ViewTableVertex> vertex_table;
+  shared_ptr<ViewTableShape> vertex_table;
+  shared_ptr<ViewTablePolygon> polygon_table;
 
   WindowVertex();
 
-  void InsertVertex(b2Vec2 vertex, int index = 0);
+  void InsertVertex(Point vertex, int index = 0);
   void RemoveVertex(int index = 0);
   
   void OnUpdateSize(int width, int height) override;
@@ -25,4 +27,4 @@ public:
 } // namespace tkgpg
 } // namespace tkht
 
-#endif /* tkgpg_window_vertex_hpp */
+#endif /* tkgpg_window_graphic_hpp */
