@@ -83,8 +83,6 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
   polygon_table->remove_action = [=](int i){
     RemoveVertex(i);
   };
-
-  Show(); 
 }
 
 void WindowVertex::InsertVertex(Point vertex, int index) {
@@ -103,28 +101,22 @@ void WindowVertex::RemoveVertex(int index) {
 void WindowVertex::OnUpdateSize(int width, int height) {
   pos = ImVec2(width - 330.0f, 0.0f);
   size = ImVec2(330.0f, height);
-  content_pos = ImVec2();
-  content_size = size;
 
   float margin = 5.0f;
   file_view->pos = ImVec2(margin, margin);
-  file_view->size = ImVec2(content_size.x - margin * 2.0f, 40.0f);
+  file_view->size = ImVec2(size.x - margin * 2.0f, 40.0f);
   vertex_table->pos = ImVec2(margin, margin + 40.0f);
-  vertex_table->size = ImVec2(content_size.x - margin * 2.0f, 100.0f);
+  vertex_table->size = ImVec2(size.x - margin * 2.0f, 100.0f);
   polygon_table->pos = ImVec2(margin, margin + 40.0f + 100.0f);
-  polygon_table->size = ImVec2(content_size.x - margin * 2.0f, content_size.y - 40.0f - 100.0f - margin * 2.0f);
+  polygon_table->size = ImVec2(size.x - margin * 2.0f, size.y - 40.0f - 100.0f - margin * 2.0f);
 }
 
 void WindowVertex::OnDisplay() {
-  Window::Begin(true);
-  {
-    file_view->Display();
-    ImGui::Separator();
-    vertex_table->Display();
-    ImGui::Separator();
-    polygon_table->Display();
-  }
-  Window::End();
+  file_view->Display();
+  ImGui::Separator();
+  vertex_table->Display();
+  ImGui::Separator();
+  polygon_table->Display();
 }
 } // namespace tkgpg
 } // namespace tkht

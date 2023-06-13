@@ -9,15 +9,16 @@ SceneEditor::SceneEditor() : Scene() {
   drawer = make_shared<tkbox::Drawer>(camera, 0.0f);
 
   canvas = make_shared<Graphic>();
+  shared_ptr<ShapeSegment> segment = make_shared<ShapeSegment>();
   canvas->color = Color(0.6f, 0.6f, 0.6f, 1.0f);
   for (int i = -10; i <= 10; i++) {
     int symbol = i % 2 == 0 ? 1 : -1;
-    canvas->shapes.push_back(make_shared<ShapeSegment>(Point(symbol * -10.0f, i), Point(symbol *  10.0f, i)));
+    segment->vertexes.push_back(Point(symbol * -10.0f, i));
+    segment->vertexes.push_back(Point(symbol *  10.0f, i));
+    segment->vertexes.push_back(Point(i, symbol * -10.0f));
+    segment->vertexes.push_back(Point(i, symbol *  10.0f));
   }
-  for (int i = -10; i <= 10; i++) {
-    int symbol = i % 2 == 0 ? 1 : -1;
-    canvas->shapes.push_back(make_shared<ShapeSegment>(Point(i, symbol * -10.0f), Point(i, symbol *  10.0f)));
-  }
+  canvas->shapes.push_back(segment);
   canvas->shapes.push_back(make_shared<ShapePoint>(5.0f, Point()));
 
   window_vertex = make_shared<WindowVertex>();
@@ -25,8 +26,6 @@ SceneEditor::SceneEditor() : Scene() {
 }
 
 void SceneEditor::OnUpdateSize(int width, int height) {
-  Scene::OnUpdateSize(width, height);
-
   camera->SetSize(width, height);
   Point offset((width - 330.0f) / 2.0f, height / 2.0f);
   camera->ConvertScreenToWorld(&offset);
