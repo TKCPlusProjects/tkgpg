@@ -23,8 +23,8 @@ SceneEditor::SceneEditor() : Scene() {
     Point(),
   }));
 
-  window_vertex = make_shared<WindowVertex>();
-  AddWindow(window_vertex);
+  graphic_window = make_shared<WindowGraphic>();
+  AddWindow(graphic_window);
 }
 
 void SceneEditor::OnUpdateSize(int width, int height) {
@@ -47,7 +47,7 @@ void SceneEditor::OnDisplay() {
       if (type_shape->vertexes.size() > 0) {
         for (size_t i = 0; i < type_shape->vertexes.size(); i++) {
           Point vertex = type_shape->vertexes[i];
-          if (i == window_vertex->polygon_table->select_index) {
+          if (i == graphic_window->polygon_table->select_index) {
             Color color(1.0f, 0.0f, 0.0f, 1.0f);
             drawer->point->Push(10.0f, &vertex, &color);
           } else {
@@ -63,7 +63,7 @@ void SceneEditor::OnDisplay() {
             camera->ConvertWorldToScreen(&vertex);
 
             if (abs(mouse_pos.x - vertex.x) < 5 && abs(mouse_pos.y - vertex.y) < 5) {
-              window_vertex->polygon_table->select_index = i;
+              graphic_window->polygon_table->select_index = i;
               editing = true;
               break;
             }
@@ -73,9 +73,9 @@ void SceneEditor::OnDisplay() {
           ImVec2 mouse_pos = ImGui::GetMousePos();
           camera->ConvertScreenToWorld((Point*)&mouse_pos);
 
-          int select_index = window_vertex->polygon_table->select_index;
+          int select_index = graphic_window->polygon_table->select_index;
           type_shape->vertexes[select_index] = Point(mouse_pos.x, mouse_pos.y);
-          window_vertex->polygon_table->cell_list[select_index]->point = Point(mouse_pos.x, mouse_pos.y);
+          graphic_window->polygon_table->cell_list[select_index]->point = Point(mouse_pos.x, mouse_pos.y);
         }
         if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
           editing = false;

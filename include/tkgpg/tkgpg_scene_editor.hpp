@@ -6,13 +6,13 @@
 
 namespace tkht {
 namespace tkgpg {
-class SceneEditor : public tkgui::Scene {
+class SceneEditor : public Scene {
 public:
-  shared_ptr<WindowVertex> window_vertex;
-
   shared_ptr<Camera> camera;
   shared_ptr<tkbox::Drawer> drawer;
   shared_ptr<Graphic> canvas;
+
+  shared_ptr<WindowGraphic> graphic_window;
 
   bool editing = false;
   

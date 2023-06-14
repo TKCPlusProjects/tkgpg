@@ -8,13 +8,13 @@
 
 namespace tkht {
 namespace tkgpg {
-class WindowVertex : public tkgui::Window {
+class WindowGraphic : public Window {
 public:  
   shared_ptr<ViewFile> file_view;
-  shared_ptr<ViewTableShape> vertex_table;
+  shared_ptr<ViewTableShape> shape_table;
   shared_ptr<ViewTablePolygon> polygon_table;
 
-  WindowVertex();
+  WindowGraphic();
     
   void OnUpdateSize(int width, int height) override;
   void OnDisplay() override;
