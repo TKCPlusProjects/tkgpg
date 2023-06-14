@@ -8,21 +8,6 @@ SceneEditor::SceneEditor() : Scene() {
   
   drawer = make_shared<tkbox::Drawer>(camera, 0.0f);
 
-  canvas = make_shared<Graphic>();
-  shared_ptr<ShapeSegment> segment = make_shared<ShapeSegment>();
-  canvas->color = Color(0.6f, 0.6f, 0.6f, 1.0f);
-  for (int i = -10; i <= 10; i++) {
-    int symbol = i % 2 == 0 ? 1 : -1;
-    segment->vertexes.push_back(Point(symbol * -10.0f, i));
-    segment->vertexes.push_back(Point(symbol *  10.0f, i));
-    segment->vertexes.push_back(Point(i, symbol * -10.0f));
-    segment->vertexes.push_back(Point(i, symbol *  10.0f));
-  }
-  canvas->shapes.push_back(segment);
-  canvas->shapes.push_back(make_shared<ShapePoint>(5.0f, vector<Point>{
-    Point(),
-  }));
-
   graphic_window = make_shared<WindowGraphic>();
   AddWindow(graphic_window);
 }
@@ -34,57 +19,57 @@ void SceneEditor::OnUpdateSize(int width, int height) {
   camera->SetCenter(-offset.x, offset.y);
 }
 
-void SceneEditor::OnDisplay() {
-  drawer->DrawGraphic(canvas.get());
-  
-  drawer->DrawGraphic(BaseGraphic.get());
-  for (shared_ptr<Shape> shape : BaseGraphic->shapes) {
-    switch (shape->type) {
-    case Shape::TypePoint: {} break;
-    case Shape::TypeSegment: {} break;
-    case Shape::TypePolygon: {
-      shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(shape);
-      if (type_shape->vertexes.size() > 0) {
-        for (size_t i = 0; i < type_shape->vertexes.size(); i++) {
-          Point vertex = type_shape->vertexes[i];
-          if (i == graphic_window->polygon_table->select_index) {
-            Color color(1.0f, 0.0f, 0.0f, 1.0f);
-            drawer->point->Push(10.0f, &vertex, &color);
-          } else {
-            Color color(0.0f, 1.0f, 0.0f, 1.0f);
-            drawer->point->Push(10.0f, &vertex, &color);
+void SceneEditor::KeyPressed() {
+  if (!editing && ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) {
+    ImVec2 mouse_pos = ImGui::GetMousePos();
+    
+    for (int i = 0; i < BaseGraphic->shapes.size(); i++) {
+      shared_ptr<Shape> shape = BaseGraphic->shapes[i];
+      switch (shape->type) {
+      case Shape::TypePoint: {} break;
+      case Shape::TypeSegment: {} break;
+      case Shape::TypePolygon: {
+        shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(shape);
+        for (int j = 0; j < type_shape->vertexes.size(); j++) {
+          Point vertex = type_shape->vertexes[j];
+          camera->ConvertWorldToScreen(&vertex);
+          
+          if (abs(mouse_pos.x - vertex.x) < 5 && abs(mouse_pos.y - vertex.y) < 5) {
+            EditingShapeIndex = i;
+            EditingVertexIndex = j;
+            ShapeChange(EditingShapeIndex, EditingVertexIndex);
+            editing = true; return;
           }
         }
-        
-        if (ImGui::IsKeyPressed(ImGuiKey_MouseLeft)) {
-          ImVec2 mouse_pos = ImGui::GetMousePos();
-          for (size_t i = 0; i < type_shape->vertexes.size(); i++) {
-            Point vertex = type_shape->vertexes[i];
-            camera->ConvertWorldToScreen(&vertex);
-
-            if (abs(mouse_pos.x - vertex.x) < 5 && abs(mouse_pos.y - vertex.y) < 5) {
-              graphic_window->polygon_table->select_index = i;
-              editing = true;
-              break;
-            }
-          }
-        }
-        if (ImGui::IsKeyDown(ImGuiKey_MouseLeft) && editing) {
-          ImVec2 mouse_pos = ImGui::GetMousePos();
-          camera->ConvertScreenToWorld((Point*)&mouse_pos);
-
-          int select_index = graphic_window->polygon_table->select_index;
-          type_shape->vertexes[select_index] = Point(mouse_pos.x, mouse_pos.y);
-          graphic_window->polygon_table->cell_list[select_index]->point = Point(mouse_pos.x, mouse_pos.y);
-        }
-        if (ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
-          editing = false;
-        }
+      } break;
+      case Shape::TypeCircle: {} break;
       }
-    } break;
-    case Shape::TypeCircle: {} break;
-    } 
+    }
   }
+}
+void SceneEditor::KeyDown() {
+  if (editing && ImGui::IsKeyDown(ImGuiKey_MouseLeft)) {
+    ImVec2 mouse_pos = ImGui::GetMousePos();
+    camera->ConvertScreenToWorld((Point*)&mouse_pos);
+    
+    ShapePolygonUpdate(EditingShapeIndex, EditingVertexIndex, (Point*)&mouse_pos);
+  }
+}
+void SceneEditor::KeyReleased() {
+  if (editing && ImGui::IsKeyReleased(ImGuiKey_MouseLeft)) {
+    editing = false;
+  }
+}
+
+void SceneEditor::OnDisplay() {
+  drawer->DrawGraphic(CanvasGraphic.get());
+  drawer->DrawGraphic(BaseGraphic.get());
+  drawer->DrawGraphic(EditingVertexesGraphic.get());
+  drawer->DrawGraphic(EditingVertexGraphic.get());
+
+  KeyPressed();
+  KeyDown();
+  KeyReleased();
 
   drawer->Flush();
 }

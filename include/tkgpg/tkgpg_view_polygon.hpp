@@ -16,7 +16,6 @@ public:
 };
 class ViewTablePolygon : public ViewTable<ViewTablePolygon, ViewTablePolygonCell> {
 public:
-  int select_index;
   function<void(int)> select_action;
   function<void(int)> edit_action;
   function<void(int)> add_action;

@@ -10,13 +10,16 @@ class SceneEditor : public Scene {
 public:
   shared_ptr<Camera> camera;
   shared_ptr<tkbox::Drawer> drawer;
-  shared_ptr<Graphic> canvas;
 
   shared_ptr<WindowGraphic> graphic_window;
 
   bool editing = false;
   
   SceneEditor();
+
+  void KeyPressed();
+  void KeyDown();
+  void KeyReleased();
   
   void OnUpdateSize(int width, int height) override;
   void OnDisplay() override;

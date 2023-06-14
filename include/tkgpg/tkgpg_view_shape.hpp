@@ -19,7 +19,6 @@ public:
 };
 class ViewTableShape : public ViewTable<ViewTableShape, ViewTableShapeCell> {
 public:
-  int select_index;
   function<void(int)> select_action;
   function<void(int)> edit_action;
   function<void(int, Shape::Type)> add_action;
