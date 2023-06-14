@@ -3,15 +3,11 @@
 namespace tkht {
 namespace tkgpg {
 WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
-  graphic = make_shared<Graphic>();
-  graphic->color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-  
   file_view = make_shared<ViewFile>();
   file_view->open_action = [=](const char* path){
-    if (graphic->path) free((void*)graphic->path);
-    graphic->path = strdup(path);
-    graphic->Read();
-    for (shared_ptr<Shape> shape : graphic->shapes) {
+    GraphicOpen(path);
+    vertex_table->cell_list.clear();
+    for (shared_ptr<Shape> shape : BaseGraphic->shapes) {
       const char* type = "";
       switch (shape->type) {
       case Shape::TypePoint   : type = "TypePoint"  ; break;
@@ -25,7 +21,7 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
     vertex_table->edit_action(0);
   };
   file_view->save_action = [=](){
-    graphic->Write();
+    GraphicSave();
   };
 
   vertex_table = make_shared<ViewTableShape>();
@@ -36,19 +32,7 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
     vertex_table->select_index = i;
   };
   vertex_table->edit_action = [=](int i){
-    shared_ptr<Shape> shape = graphic->shapes[vertex_table->select_index];
-    switch (shape->type) {
-      case Shape::TypePoint: {} break;
-      case Shape::TypeSegment: {} break;
-      case Shape::TypePolygon: {
-        shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(graphic->shapes[vertex_table->select_index]);
-        for (Point vertex : type_shape->vertexes) {
-          polygon_table->cell_list.push_back(polygon_table->CreateCell(vertex));
-        }
-        polygon_table->select_index = 0;
-      } break;
-      case Shape::TypeCircle: {} break;
-    }
+    ShapeChange(i);
   };
   vertex_table->add_action = [=](int i, Shape::Type type){
     switch (type) {
@@ -59,7 +43,7 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
     }
   };
   vertex_table->remove_action = [=](int i){
-    RemoveVertex(i);
+    vertex_table->cell_list.erase(vertex_table->cell_list.begin() + i);
   };
 
   polygon_table = make_shared<ViewTablePolygon>();
@@ -70,32 +54,37 @@ WindowVertex::WindowVertex() : Window("TKGPG_WINDOW_VERTEX") {
     polygon_table->select_index = i;
   };
   polygon_table->edit_action = [=](int i){
-    shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(graphic->shapes[vertex_table->select_index]);
+    shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(BaseGraphic->shapes[vertex_table->select_index]);
     type_shape->vertexes[i] = polygon_table->cell_list[i]->point;
   };
   polygon_table->add_action = [=](int i){
-    shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(graphic->shapes[vertex_table->select_index]);
-    Point curr = type_shape->vertexes[i];
-    Point next = i+1 < type_shape->vertexes.size() ? type_shape->vertexes[i+1] : type_shape->vertexes[0];
-    Point mid = 0.5f * (curr + next);
-    InsertVertex(mid, i + 1);
+    ShapePolygonInsert(vertex_table->select_index, i);
+    polygon_table->select_index = i+1;
   };
   polygon_table->remove_action = [=](int i){
-    RemoveVertex(i);
+    ShapePolygonRemove(vertex_table->select_index, i);
   };
-}
 
-void WindowVertex::InsertVertex(Point vertex, int index) {
-  shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(graphic->shapes[vertex_table->select_index]);
-  type_shape->vertexes.insert(type_shape->vertexes.begin() + index, vertex);
-  polygon_table->cell_list.insert(polygon_table->cell_list.begin() + index, polygon_table->CreateCell(vertex));
-  if (index == polygon_table->select_index) polygon_table->select_index++;
-}
-
-void WindowVertex::RemoveVertex(int index) {
-  shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(graphic->shapes[polygon_table->select_index]);
-  type_shape->vertexes.erase(type_shape->vertexes.begin() + index);
-  polygon_table->cell_list.erase(polygon_table->cell_list.begin() + index);
+  SetShapeChanged([=](int shape_i) {
+    if (vertex_table->select_index == shape_i) {
+      shared_ptr<Shape> shape = BaseGraphic->shapes[shape_i];
+      switch (shape->type) {
+        case Shape::TypePoint: {} break;
+        case Shape::TypeSegment: {} break;
+        case Shape::TypePolygon: {
+          shared_ptr<ShapePolygon> type_shape = static_pointer_cast<ShapePolygon>(BaseGraphic->shapes[vertex_table->select_index]);
+          polygon_table->cell_list.clear();
+          for (Point vertex : type_shape->vertexes) {
+            polygon_table->cell_list.push_back(polygon_table->CreateCell(vertex));
+          }
+          if (polygon_table->select_index > polygon_table->cell_list.size()) {
+            polygon_table->select_index = polygon_table->cell_list.size() - 1;
+          }
+        } break;
+        case Shape::TypeCircle: {} break;
+      }
+    }
+  });
 }
 
 void WindowVertex::OnUpdateSize(int width, int height) {

@@ -8,6 +8,15 @@
 
 namespace tkht {
 namespace tkgpg {
+extern shared_ptr<Graphic> BaseGraphic;
+
+void GraphicOpen(const char* path);
+void GraphicSave();
+
+void SetShapeChanged(function<void(int)> callback);
+void ShapeChange(int shape_i);
+void ShapePolygonInsert(int shape_i, int vertex_i, Point* vertex = nullptr);
+void ShapePolygonRemove(int shape_i, int vertex_i);
 } // namespace tkgpg
 } // namespace tkht
 

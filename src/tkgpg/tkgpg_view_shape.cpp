@@ -7,7 +7,7 @@ void ViewTableShapeCell::OnDisplay() {
 
   ImGui::Separator();
   ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.0f, 0.0f, (index == table->select_index) ? 1.0f : 0.0f));
-  char buf[32];
+  char buf[32] = {0};
   sprintf(buf, "%d", index);
   if (ImGui::Button(buf, ImVec2(50.0f, 30.0f))) {
     table->action = [=](){

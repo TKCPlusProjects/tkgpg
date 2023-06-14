@@ -19,7 +19,9 @@ SceneEditor::SceneEditor() : Scene() {
     segment->vertexes.push_back(Point(i, symbol *  10.0f));
   }
   canvas->shapes.push_back(segment);
-  canvas->shapes.push_back(make_shared<ShapePoint>(5.0f, Point()));
+  canvas->shapes.push_back(make_shared<ShapePoint>(5.0f, vector<Point>{
+    Point(),
+  }));
 
   window_vertex = make_shared<WindowVertex>();
   AddWindow(window_vertex);
@@ -35,8 +37,8 @@ void SceneEditor::OnUpdateSize(int width, int height) {
 void SceneEditor::OnDisplay() {
   drawer->DrawGraphic(canvas.get());
   
-  drawer->DrawGraphic(window_vertex->graphic.get());
-  for (shared_ptr<Shape> shape : window_vertex->graphic->shapes) {
+  drawer->DrawGraphic(BaseGraphic.get());
+  for (shared_ptr<Shape> shape : BaseGraphic->shapes) {
     switch (shape->type) {
     case Shape::TypePoint: {} break;
     case Shape::TypeSegment: {} break;

@@ -9,18 +9,13 @@
 namespace tkht {
 namespace tkgpg {
 class WindowVertex : public tkgui::Window {
-public:
-  shared_ptr<Graphic> graphic;
-  
+public:  
   shared_ptr<ViewFile> file_view;
   shared_ptr<ViewTableShape> vertex_table;
   shared_ptr<ViewTablePolygon> polygon_table;
 
   WindowVertex();
-
-  void InsertVertex(Point vertex, int index = 0);
-  void RemoveVertex(int index = 0);
-  
+    
   void OnUpdateSize(int width, int height) override;
   void OnDisplay() override;
 };
