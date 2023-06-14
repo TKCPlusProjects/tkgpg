@@ -2,6 +2,45 @@
 
 namespace tkht {
 namespace tkgpg {
+ViewTableShapeCell::ViewTableShapeCell() : ViewTableCell() {
+  shared_ptr<ViewTableShape> table = this->table.lock();
+
+  popup = make_shared<Popup>(vector<shared_ptr<MenuItem>>{
+    make_shared<MenuItem>("Edit", [=](){ 
+      table->action = [=](){
+        table->edit_action(index);
+      };
+    }),
+    make_shared<MenuItem>("Add", vector<shared_ptr<MenuItem>>{
+      make_shared<MenuItem>("Point", [=](){ 
+        table->action = [=](){
+          table->add_action(index, Shape::TypePoint);
+        };
+      }),
+      make_shared<MenuItem>("Segment", [=](){ 
+        table->action = [=](){
+          table->add_action(index, Shape::TypeSegment);
+        };
+      }),
+      make_shared<MenuItem>("Polygon", [=](){ 
+        table->action = [=](){
+          table->add_action(index, Shape::TypePolygon);
+        };
+      }),
+      make_shared<MenuItem>("Circle", [=](){ 
+        table->action = [=](){
+          table->add_action(index, Shape::TypeCircle);
+        };
+      }),
+    }),
+    make_shared<MenuItem>("Remove", [=](){ 
+      table->action = [=](){
+        table->remove_action(index);
+      };
+    }),
+  });
+}
+
 void ViewTableShapeCell::OnDisplay() {
   shared_ptr<ViewTableShape> table = this->table.lock();
 
@@ -22,47 +61,7 @@ void ViewTableShapeCell::OnDisplay() {
       table->select_action(index);
     };
   }
-
-  ImGuiID menu_id = tkgui::ViewID();
-  if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
-    ImGui::OpenPopupEx(menu_id, ImGuiPopupFlags_None);
-  }
-  if (ImGui::BeginPopupEx(menu_id, tkgui::UIFlags | ImGuiWindowFlags_AlwaysAutoResize)) {
-    if (ImGui::MenuItem("Edit")) {
-      table->action = [=](){
-        table->edit_action(index);
-      };
-    }
-    if (ImGui::BeginMenu("Add")) {
-      if (ImGui::MenuItem("Point")) {
-        table->action = [=](){
-          table->add_action(index, Shape::TypePoint);
-        };
-      }
-      if (ImGui::MenuItem("Segment")) {
-        table->action = [=](){
-          table->add_action(index, Shape::TypeSegment);
-        };
-      }
-      if (ImGui::MenuItem("Polygon")) {
-        table->action = [=](){
-          table->add_action(index, Shape::TypePolygon);
-        };
-      }
-      if (ImGui::MenuItem("Circle")) {
-        table->action = [=](){
-          table->add_action(index, Shape::TypeCircle);
-        };
-      }
-      ImGui::EndMenu();
-    }
-    if (ImGui::MenuItem("Remove")) {
-      table->action = [=](){
-        table->remove_action(index);
-      };
-    }
-    ImGui::EndPopup();
-  }
+  popup->Pin();
 
   ImGui::Separator();
 }

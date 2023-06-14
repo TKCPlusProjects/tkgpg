@@ -12,6 +12,9 @@ class ViewTableShapeCell : public ViewTableCell<ViewTableShape> {
 public:
   const char* text;
 
+  shared_ptr<Popup> popup;
+
+  ViewTableShapeCell();
   void OnDisplay() override;
 };
 class ViewTableShape : public ViewTable<ViewTableShape, ViewTableShapeCell> {
